@@ -1,0 +1,11 @@
+5
+Administrator
+mainadmin,-,-,-,MainAdmin0
+Administrator
+stefka,Stefka,Lyaskalieva,stefka,Stefi18
+Player
+ivan,Ivan,Ivanov,ivan@gmail.com,Ivan00,200,1,Firestorm,Fire,Boy,1800,3600,Attacking,Fire
+Player
+krisi,Kristina,Ivanova,krisi,Krisssi1,2000,0,
+Administrator
+mimi,Mariq,Stefanova,mims,Mimi11

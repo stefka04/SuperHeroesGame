@@ -12,27 +12,26 @@ protected:
 	MyString email;
 	MyString password;
 	UserType type; 
-	bool isLoggedIn = false;
 public:
 	static bool checkIfContains(bool (*pred) (char symbol), const MyString& newPassword);
 	static bool isUpper(char symbol);
 	static bool isLower(char symbol);
 	static bool isNumber(char symbol);
 
+	User() = default; 
 	User(const char* username, const MyString& firstName, const MyString& secondName, 
 		 const MyString& email, const MyString& password, UserType type);
 	void setPassword(const MyString& newPassword);       
 	void setUsername(const char* username);
 
-	void setLoggInStatus(bool isLggedIn);
+	void setUserType(UserType type);
 
 	const MyString& getFirstName() const;
 	const MyString& getSecondName() const;
 	const MyString& getEmail() const;
-	const MyString& getPassword() const;     
+	const MyString& getPassword() const;   
 	const char* getUsername() const;
-	const UserType& getUserType() const;
-	bool getIsLoggedIn() const;
+	UserType getUserType() const;
 
 	virtual User* clone() const = 0;
     virtual void readFromFile(std::ifstream& in) = 0;

@@ -75,9 +75,10 @@ void User::setUsername(const char* username)
 	strcpy(this->username, username);
 }
 
-void User::setLoggInStatus(bool isLggedIn)
+
+void User::setUserType(UserType type)
 {
-	this->isLoggedIn = isLoggedIn;
+	this->type = type;
 }
 
 const MyString& User::getFirstName() const
@@ -105,12 +106,9 @@ const char* User::getUsername() const
 	return username;
 }
 
-const UserType& User::getUserType() const
+UserType User::getUserType() const
 {
 	return type;
 }
 
-bool User::getIsLoggedIn() const
-{
-	return isLoggedIn;
-}
+

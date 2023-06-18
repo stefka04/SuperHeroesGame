@@ -14,6 +14,7 @@ private:
 	void free();
 public:
 	MyVector();
+	MyVector(size_t capacity);
 	MyVector(const MyVector<T>& other);
 	MyVector(MyVector<T>&& other) noexcept;
 	MyVector <T>& operator=(const MyVector<T>& other);
@@ -29,13 +30,22 @@ public:
 	void pushBack(const T& item);
 	void pushBack(const T&& item);
 	void popAt(size_t index);
+	void popBack();
 
+	void clear();
 };
 
 template <typename T> 
 MyVector<T>::MyVector()
 {
 	capacity = INITIAL_CAPACITY;
+	size = 0;
+	data = new T[capacity];
+}
+template <typename T>
+MyVector<T>::MyVector(size_t capacity)
+{
+	this->capacity = capacity;
 	size = 0;
 	data = new T[capacity];
 }
@@ -170,4 +180,16 @@ void MyVector <T>::popAt(size_t index)
 	{
 		data[i] = std::move(data[i + 1]);
 	}
+}
+template<typename T>
+void MyVector<T>::popBack() {
+	if (size == 0) {
+		throw std::exception("Vector is empty");
+	}
+	data[--size];
+}
+template<typename T>
+void MyVector<T>::clear()
+{
+	size = 0;
 }

@@ -1,16 +1,18 @@
 #pragma once
-#include "SuperHeroe.h"
+#include "SuperHero.h"
 #include "MyVector.hpp"
 class Marketplace
 {
-	MyVector<SuperHeroe> allSuperHeroes;
+	MyVector<SuperHero> allSuperHeroes;
 
-	size_t getIndexOfHeroeByName(const char* superHeroeName) const;
 public:
 	Marketplace() = default;
-	
-	void addSuperHeroe(const SuperHeroe& newHeroe);
-	void removeSuperHeroe(const char* nickname);
+	const MyVector<SuperHero>& getAllHeroes();
+	const size_t getCountOfHeroes() const;
+	const SuperHero& getSuperHeroAtIndex(size_t index) const;
+	size_t getIndexOfHeroByName(const char* superHeroName) const;
+	void addSuperHero(const SuperHero& newHero);
+	void removeSuperHero(const char* nickname);
 
 	void print() const;
 	void writeToFile(std::ofstream& out) const;

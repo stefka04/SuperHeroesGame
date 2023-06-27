@@ -117,7 +117,7 @@ Command* CommandFactory::attack() const
 {
 	system("CLS");
 	std::cout << ">attack user" << std::endl;
-	std::cout << ">attack random user" << std::endl;
+	std::cout << ">attack random hero" << std::endl;
 	std::cout << "Please enter command: ";
 	MyString command;
 	std::cin >> command;
@@ -129,24 +129,28 @@ Command* CommandFactory::attack() const
 		char opponentHeroName[MAX_USERNAME_SIZE + 1];
 		char attackingHeroName[MAX_USERNAME_SIZE + 1];
 		char opponentUsername[MAX_USERNAME_SIZE + 1];
-		std::cout << "Enter the user you want to attack:";
+		std::cout << "Enter the user you want to attack: ";
 		std::cin >> opponentUsername;
 		std::cout << "Enter the superhero nickname you want to attack with: ";
 		std::cin >> attackingHeroName;
-		std::cout << "Enter the superhero you want to attack : ";
+		std::cout << "Enter the superhero you want to attack: ";
 		std::cin >> opponentHeroName;
+		std::cin.ignore();
 		return new CommandAttackByName(opponentUsername, attackingHeroName, opponentHeroName);
 	}
-	else if (command == "attack random user")
+	else if (command == "attack random hero")
 	{
+		char opponentUsername[MAX_USERNAME_SIZE + 1];
 		char attackingHeroName[MAX_USERNAME_SIZE + 1];
 		std::cout << "Enter the superhero nickname you want to attack with: ";
 		std::cin >> attackingHeroName;
-		return new CommandAttackRandom(attackingHeroName);
+		std::cout << "Enter the user you want to attack: ";
+		std::cin >> opponentUsername;
+		std::cin.ignore();
+		return new CommandAttackRandom(opponentUsername, attackingHeroName);
 	}
 	else
 	{
-		std::cout << "Not valid command!";
 		throw std::exception("Not valid command!");
 	}
 }
@@ -198,7 +202,6 @@ Command* CommandFactory::addHero() const
 }
 Command* CommandFactory::addUser(MyString& command) const
 {
-
 	char username[MAX_USERNAME_SIZE + 1];
 	MyString firstName;
 	MyString secondName;
@@ -218,7 +221,6 @@ Command* CommandFactory::signIn() const
 	std::cin.ignore();
 	std::cout << "Password:";
 	std::cin >> password;
-	system("CLS");
 	return new CommandSignIn(username, password);
 }
 CommandFactory& CommandFactory::getInstance()

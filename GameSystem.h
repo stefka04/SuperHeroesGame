@@ -21,11 +21,13 @@ class GameSystem
 	void readLeaderBoardFile(MyVector<MyString>& usernames, MyVector<long>& moneyArr) const;
 	void saveToFile(std::ofstream& out);
 	void addUser(User* newUser);
+	void updateLoggedIndexes(size_t removedPlayerIndex);
 
 	bool checkIfUserLoggedBefore(size_t index) const;
 	template <typename T>
 	static void swap(T& item1, T& item2);
 	static void sortByMoney(MyVector<MyString>& usernames, MyVector<long>& moneyArr);
+    
 public:
 	GameSystem(const GameSystem& other) = delete;
 	GameSystem& operator= (const GameSystem& other) = delete;
@@ -60,7 +62,7 @@ public:
 	void addAlreadyBoughtHeroToTheMarket(const char* supername);
 
 	void attack(const char* username, const char* attackingHeroName, const char* opponentHeroName);
-	void attack(const char* attackingHeroName);
+	void attack(const char* opponentUsername, const char* attackingHeroName);
 	void changeAttackingMode(const char* superHeroName, AttackingMode mode);
 
 	void logOut();

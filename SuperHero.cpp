@@ -4,7 +4,6 @@
 #include <cstring>
 long SuperHero::convertStringToNum(const char* str)
 {
-
 	long result = 0;
 	size_t i = 0;
 	while (str[i] != '\0')
@@ -94,7 +93,6 @@ void SuperHero::readFromFile(std::ifstream& in)
 	char buff[MAX_BUFF_SIZE];
 	in.getline(buff, MAX_BUFF_SIZE);
 	std::stringstream str(buff);
-
 	str.getline(supername, MAX_USERNAME_SIZE, ',');
 	str.getline(buff, MAX_BUFF_SIZE, ',');
 	firstName = MyString(buff);
@@ -104,10 +102,8 @@ void SuperHero::readFromFile(std::ifstream& in)
 	price = convertStringToNum(buff);
 	str.getline(buff, MAX_BUFF_SIZE, ',');
 	strengthPoints = convertStringToNum(buff);
-
 	str.getline(buff, MAX_BUFF_SIZE, ',');
 	mode = strcmp(buff, "Attacking") == 0 ? AttackingMode::Attacking : AttackingMode::Defensive;
-
 	str.getline(buff, MAX_BUFF_SIZE, ',');
 	if (strcmp(buff, "Fire") == 0)
 	{

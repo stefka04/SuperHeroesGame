@@ -6,7 +6,6 @@
 GameSystem* gameSystem = GameSystem::getInstance();
 void printInitialMenu()
 {
-	system("CLS");
 	std::cout << ">sign in" << std::endl;
 	std::cout << ">add administrator" << std::endl;
 	std::cout << ">add player" << std::endl;

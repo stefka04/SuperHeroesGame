@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdlib.h> 
 #include <ctime>
+#include <cstring>
+#pragma warning (disable: 4996)
 GameSystem* GameSystem::instance = nullptr;
 GameSystem::GameSystem()
 {
@@ -39,7 +41,6 @@ GameSystem::GameSystem()
 		countOfUsers = 1;
 	}
 	in.close();
-
 }
 
 GameSystem* GameSystem::getInstance()
@@ -227,6 +228,8 @@ void GameSystem::addUser(User* newUser)
 	if (!checkIsUsernameTaken(newUser->getUsername()))
 	{
 		users[countOfUsers++] = newUser;
+		std::ofstream out(usersFile);
+		saveToFile(out);
 	}
 	else
 	{
@@ -253,8 +256,8 @@ size_t GameSystem::getCountOfPlayersLogged() const
 
 void GameSystem::deleteUser(const char* username)
 {
-	size_t index = getIndexOfUserByUsername(username);
-	if (users[index]->getUserType() == UserType::Administrator)
+	size_t removedIndex = getIndexOfUserByUsername(username);
+	if (users[removedIndex]->getUserType() == UserType::Administrator)
 	{
 		throw std::exception("Cannot delete an administrator!");
 	}
@@ -265,9 +268,36 @@ void GameSystem::deleteUser(const char* username)
 			throw std::exception("Cannot delete other players!");
 		}
 	}
-	users[index] = users[--countOfUsers];
+	countOfUsers--;
+	for (size_t i = removedIndex; i < countOfUsers; i++)
+	{
+		users[i] = std::move(users[i + 1]);
+	}
+	if (removedIndex < indexOfCurrentUser)
+	{
+		indexOfCurrentUser--;
+	}
+	else if (removedIndex == indexOfCurrentUser)
+	{
+		indexOfCurrentUser = 0;
+	}
+	updateLoggedIndexes(removedIndex);
+	//users[index] = users[--countOfUsers]; before
 }
-
+void GameSystem::updateLoggedIndexes(size_t removedPlayerIndex)
+{
+	for (size_t i = 0; i < loggedIndexes.getSize(); i++)
+	{
+		if (loggedIndexes[i] == removedPlayerIndex)
+		{
+			loggedIndexes.popAt(i);
+		}
+		else if (loggedIndexes[i] > removedPlayerIndex)
+		{
+			loggedIndexes[i]--;
+		}
+	}
+}
 void GameSystem::showPlayers() const
 {
 
@@ -340,6 +370,7 @@ void GameSystem::sortByMoney(MyVector<MyString>& usernames, MyVector<long>& mone
 		}
 	}
 }
+
 void GameSystem::readLeaderBoardFile(MyVector<MyString>& usernames, MyVector<long>& moneyArr) const
 {
 	std::ifstream in(leaderboardFile);
@@ -348,7 +379,7 @@ void GameSystem::readLeaderBoardFile(MyVector<MyString>& usernames, MyVector<lon
 		std::cout << "File can not be open!";
 		return;
 	}
-	char buff[MAX_BUFF_SIZE];
+	char buff[MAX_BUFF_SIZE] = "";
 	while (!in.eof())
 	{
 		in.getline(buff, MAX_BUFF_SIZE, ',');
@@ -370,6 +401,10 @@ void GameSystem::showLeaderBoard() const
 	MyVector<long> moneyArr;
 	readLeaderBoardFile(usernames, moneyArr);
 	size_t countOfPlayers = usernames.getSize();
+	if (countOfPlayers == 0)
+	{
+		return;
+	}
 	sortByMoney(usernames, moneyArr);
 	for (size_t i = 0; i < countOfPlayers; i++)
 	{
@@ -480,19 +515,23 @@ void GameSystem::attack(const char* opponentUsername, const char* attackingHeroN
 	Player* opponent = dynamic_cast<Player*>(users[indexOfOpponent]);            
 	dynamic_cast<Player*>(users[indexOfCurrentUser])->attack(*opponent, attackingHeroName, opponentHeroName);
 }
-void GameSystem::attack(const char* attackingHeroName)
+void GameSystem::attack(const char* opponentUsername, const char* attackingHeroName)
 {
 	srand(time(0));  //Use current time as seed for random generator
-	size_t indexOfOpponent = 0, indexOfHero = 0;
-	do
-	{
-		indexOfOpponent = rand() % countOfUsers;
-	} while (users[indexOfOpponent]->getUserType() != UserType::Administrator);
+	size_t indexOfHero = 0;
+	size_t indexOfOpponent = getIndexOfUserByUsername(opponentUsername);
 	size_t countOfHeroes = dynamic_cast<Player*>(users[indexOfCurrentUser])->getCountOfSuperHeroes();
 
 	indexOfHero = rand() % countOfHeroes;
-
-	attack(users[indexOfOpponent]->getUsername(), attackingHeroName, dynamic_cast<Player*>(users[indexOfOpponent])->getSuperHeroAtIndex(indexOfHero).getSupername());
+	char opponentHeroName[MAX_USERNAME_SIZE + 1];
+	try {
+		strcpy(opponentHeroName, dynamic_cast<Player*>(users[indexOfOpponent])->getSuperHeroAtIndex(indexOfHero).getSupername());
+	}
+	catch (std::invalid_argument)
+	{
+		strcpy(opponentHeroName, "");
+	}
+	attack(opponentUsername, attackingHeroName, opponentHeroName);
 }
 void GameSystem::changeAttackingMode(const char* superHeroName, AttackingMode mode)
 {

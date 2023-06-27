@@ -8,4 +8,5 @@ CommandAddAlreadyBoughtHero::CommandAddAlreadyBoughtHero(const char* username)
 void CommandAddAlreadyBoughtHero::execute(GameSystem& system)
 {
 	system.addAlreadyBoughtHeroToTheMarket(supername);
+	std::cout << "Successfully add hero to the market! " << std::endl;
 }

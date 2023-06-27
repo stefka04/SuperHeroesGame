@@ -17,6 +17,4 @@ void CommandAttackByName::execute(GameSystem& system)
 	{
 		std::cout << " Error!" << std::endl;
 	}
-	
-
 }

@@ -75,7 +75,7 @@ bool Player::canMakeMove() const
 }
 const SuperHero& Player::getSuperHeroAtIndex(size_t index) const
 {
-	if (index > superHeroes.getSize())
+	if (index >= superHeroes.getSize())
 	{
 		throw std::invalid_argument("Error! Not valid index!");
 	}
@@ -83,7 +83,7 @@ const SuperHero& Player::getSuperHeroAtIndex(size_t index) const
 }
 SuperHero& Player::getSuperHeroAtIndex(size_t index)
 {
-	if (index > superHeroes.getSize())
+	if (index >= superHeroes.getSize())
 	{
 		throw std::invalid_argument("Error! Not valid index!");
 	}
@@ -229,13 +229,13 @@ void Player::removeSuperHero(const char* nickname)
 
 void Player::attack(Player& opponent, const char* attackingHeroName, const char* opponentHeroName)
 {
-	size_t indexOfAttackingHero = getIndexOfHeroByName(attackingHeroName);
 	incrementCountOfMoves();
+	size_t indexOfAttackingHero = getIndexOfHeroByName(attackingHeroName);
 	if (opponent.getCountOfSuperHeroes() == 0)
 	{
 		opponent.setMoney(opponent.getMoney() - superHeroes[indexOfAttackingHero].getStrengthPoints());
 		setMoney(getMoney() + x);
-		std::cout << " Congratulations you have won! You have earned " << x << "$!";
+		std::cout << " Congratulations you have won! You have earned " << x << "$!" << std::endl;
 		return;
 	}
 	size_t indexOfOpponentHero = opponent.getIndexOfHeroByName(opponentHeroName);
